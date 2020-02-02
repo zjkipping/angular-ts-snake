@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { EntityID, DrawLayer, Direction } from './utility-types';
+import { EntityID, DrawLayer, Direction, Vector } from './utility-types';
 
 export enum SegmentType {
   Head,
@@ -7,10 +7,13 @@ export enum SegmentType {
 }
 
 export class SnakeSegment extends Entity {
-  id: EntityID.Snake;
-  layer: DrawLayer.None;
-  type: SegmentType;
-  direction: Direction;
+  id = EntityID.Snake;
+  layer = DrawLayer.Snake;
+  direction = Direction.None;
+
+  constructor(public type: SegmentType, public position: Vector) {
+    super();
+  }
 
   update(gameTime: any) {}
   draw(canvas: any, gameTime: any) {}

@@ -1,10 +1,8 @@
 import { Vector, DrawLayer, EntityID } from './utility-types';
+import { Drawable } from './drawable';
 
-export abstract class Entity {
-  id: EntityID;
-  layer: DrawLayer;
-  position: Vector;
-
-  abstract update(gameTime: any, ...args: any);
-  abstract draw(canvas: any, gameTime: any, ...args: any);
+export abstract class Entity extends Drawable {
+  abstract id: EntityID;
+  abstract layer: DrawLayer;
+  abstract position: Vector;
 }
