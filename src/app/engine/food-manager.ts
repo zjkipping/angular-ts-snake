@@ -1,6 +1,6 @@
 import { EntityManager } from './entity-manager';
 
 export class FoodManager extends EntityManager {
-  update(gameTime: any, keyboard: any) {}
-  draw(canvas: any, gameTime: any) {}
+  update(elapsedTime: number) {}
+  draw(canvas: CanvasRenderingContext2D, elapsedTime: number) {}
 }

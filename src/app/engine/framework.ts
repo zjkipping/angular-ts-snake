@@ -2,6 +2,10 @@ import { SnakeManager } from './snake-manager';
 import { layerCount, Dimensions } from './utility-types';
 import { Entity } from './entity';
 import { FoodManager } from './food-manager';
+import { UserInputStatuses } from './user-input-manager';
+
+import * as Stats from 'stats.js';
+import { environment } from 'src/environments/environment';
 
 // pixels
 const tileDimensions: Dimensions = {
@@ -21,24 +25,42 @@ export class GameEngine {
   snakeManager: SnakeManager;
   foodManager: FoodManager;
 
+  stats: Stats | undefined;
+
   constructor() {
     // setup the initial entities
     this.snakeManager = new SnakeManager();
     this.foodManager = new FoodManager();
+
+    if (!environment.production) {
+      this.stats = new Stats();
+      this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+      document.body.appendChild(this.stats.dom);
+    }
   }
 
   tick(
     canvas: CanvasRenderingContext2D,
+    userInput: UserInputStatuses,
     screenDimensions: Dimensions,
     time: number
   ) {
+    if (this.stats) {
+      this.stats.begin();
+    }
     const elapsedTime = time - this.lastRender;
-    this.update(elapsedTime);
+    this.update(elapsedTime, userInput);
     this.draw(canvas, screenDimensions);
     this.lastRender = time;
+    if (this.stats) {
+      this.stats.end();
+    }
   }
 
-  update(elapsedTime: number) {}
+  update(elapsedTime: number, userInput: UserInputStatuses) {
+    this.snakeManager.update(elapsedTime, userInput);
+    this.foodManager.update(elapsedTime);
+  }
 
   draw(canvas: CanvasRenderingContext2D, dimensions: Dimensions) {
     canvas.clearRect(0, 0, dimensions.width, dimensions.height);
