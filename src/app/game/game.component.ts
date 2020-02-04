@@ -47,7 +47,6 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         const crc = canvasRenderingContext;
 
         const screenResize = fromEvent(window, 'resize').pipe(
-          // tap()
           map(() => ({
             width: canvasElement.width,
             height: canvasElement.height
@@ -62,14 +61,20 @@ export class GameComponent implements AfterViewInit, OnDestroy {
           next: event => this.userInputManager.keyDown(event.key)
         } as NextObserver<KeyboardEvent>;
         fromEvent<KeyboardEvent>(window, 'keydown')
-          .pipe(takeUntil(this.destroyCleanup))
+          .pipe(
+            filter(event => !event.repeat),
+            takeUntil(this.destroyCleanup)
+          )
           .subscribe(keyDownObserver);
 
         const keyUpObserver = {
           next: event => this.userInputManager.keyUp(event.key)
         } as NextObserver<KeyboardEvent>;
         fromEvent<KeyboardEvent>(window, 'keyup')
-          .pipe(takeUntil(this.destroyCleanup))
+          .pipe(
+            filter(event => !event.repeat),
+            takeUntil(this.destroyCleanup)
+          )
           .subscribe(keyUpObserver);
 
         const gameLoop: Observable<[

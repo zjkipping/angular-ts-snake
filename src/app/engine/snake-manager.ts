@@ -1,11 +1,11 @@
 import { SnakeSegment } from './snake-segment';
 import { EntityManager } from './entity-manager';
 import { UserInputStatuses, KeyStatus } from './user-input-manager';
-import { Direction, Dimensions } from './utility-types';
+import { Direction, Dimensions, DrawLayer } from './utility-types';
 
 export class SnakeManager extends EntityManager {
   segments: SnakeSegment[] = [];
-  position = { x: 0, y: 0 };
+  position = { x: 12, y: 12 };
   direction = Direction.None;
   movementTimeElapsed = 0;
 
@@ -41,14 +41,22 @@ export class SnakeManager extends EntityManager {
     }
   }
 
-  draw(canvas: CanvasRenderingContext2D, tileRatio: Dimensions) {
-    canvas.fillStyle = 'rgba(57, 185, 192, 1)';
-    canvas.fillRect(
-      this.position.x * tileRatio.width,
-      this.position.y * tileRatio.height,
-      tileRatio.width,
-      tileRatio.height
-    );
-    canvas.stroke();
+  draw(
+    canvas: CanvasRenderingContext2D,
+    pptRatio: Dimensions,
+    layer: DrawLayer
+  ) {
+    if (layer === DrawLayer.Snake) {
+      canvas.beginPath();
+      canvas.fillStyle = 'rgba(57, 185, 192, 1)';
+      canvas.fillRect(
+        this.position.x * pptRatio.width,
+        this.position.y * pptRatio.height,
+        pptRatio.width,
+        pptRatio.height
+      );
+      canvas.stroke();
+      canvas.closePath();
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { EntityID, DrawLayer, Vector } from './utility-types';
+import { EntityID, DrawLayer, Vector, Dimensions } from './utility-types';
 
 export class Food extends Entity {
   id = EntityID.Food;
@@ -9,6 +9,11 @@ export class Food extends Entity {
     super();
   }
 
-  update(gameTime: any) {}
-  draw(canvas: any, gameTime: any) {}
+  update(elapsedTime: number) {}
+
+  draw(
+    canvas: CanvasRenderingContext2D,
+    pptRatio: Dimensions,
+    layer: DrawLayer
+  ) {}
 }

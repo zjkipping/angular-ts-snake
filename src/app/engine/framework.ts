@@ -1,14 +1,15 @@
 import { SnakeManager } from './snake-manager';
 import { layerCount, Dimensions } from './utility-types';
-import { Entity } from './entity';
 import { FoodManager } from './food-manager';
 import { UserInputStatuses } from './user-input-manager';
 
 import * as Stats from 'stats.js';
 import { environment } from 'src/environments/environment';
 import { Drawable } from './drawable';
+import { Tile } from './tile';
 
-// pixels
+// pixels per tile
+// (Need to figure out resolution changing with a perfect square canvas first to be of use)
 const tileDimensions: Dimensions = {
   width: 16,
   height: 16
@@ -20,22 +21,42 @@ const screenLayout: Dimensions = {
   height: 25
 };
 
+export enum GameStatus {
+  StartMenu,
+  Playing,
+  Paused,
+  EndMenu
+}
+
 export class GameEngine {
-  lastRender = 0;
+  lastTick = 0;
+
+  gameStatus = GameStatus.Playing;
 
   snakeManager: SnakeManager;
   foodManager: FoodManager;
+  tiles: Tile[] = [];
+
+  entitiesToDraw: Drawable[];
 
   stats: Stats | undefined;
 
   constructor() {
     // setup the initial entities
+    for (let x = 0; x < screenLayout.width; x++) {
+      for (let y = 0; y < screenLayout.height; y++) {
+        this.tiles.push(new Tile({ x, y }));
+      }
+    }
     this.snakeManager = new SnakeManager();
     this.foodManager = new FoodManager();
 
+    this.entitiesToDraw = [...this.tiles, this.snakeManager, this.foodManager];
+
+    // fps display
     if (!environment.production) {
       this.stats = new Stats();
-      this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+      this.stats.showPanel(0);
       document.body.appendChild(this.stats.dom);
     }
   }
@@ -49,33 +70,39 @@ export class GameEngine {
     if (this.stats) {
       this.stats.begin();
     }
-    const elapsedTime = time - this.lastRender;
-    this.update(elapsedTime, userInput);
+    const elapsedTime = time - this.lastTick;
+    const hitDetections = this.calculateHitDetections();
+    this.update(elapsedTime, userInput, hitDetections);
     this.draw(canvas, screenDimensions);
-    this.lastRender = time;
+    this.lastTick = time;
     if (this.stats) {
       this.stats.end();
     }
   }
 
-  update(elapsedTime: number, userInput: UserInputStatuses) {
+  calculateHitDetections() {}
+
+  update(
+    elapsedTime: number,
+    userInput: UserInputStatuses,
+    hitDetections: any
+  ) {
     this.snakeManager.update(elapsedTime, userInput);
     this.foodManager.update(elapsedTime);
   }
 
   draw(canvas: CanvasRenderingContext2D, dimensions: Dimensions) {
-    const pptRatio = calculatePPT(dimensions, screenLayout.width);
-
     canvas.clearRect(0, 0, dimensions.width, dimensions.height);
+    canvas.save();
 
-    const entities: Drawable[] = [this.snakeManager];
-    // for (let layer = 0; layer < layerCount; layer++) {
-    entities.forEach(entity => {
-      // if (entity.layer === layer) {
-      entity.draw(canvas, pptRatio);
-      // }
-    });
-    // }
+    const pptRatio = calculatePPT(dimensions, screenLayout.width);
+    for (let layer = 0; layer < layerCount; layer++) {
+      this.entitiesToDraw.forEach(entity => {
+        entity.draw(canvas, pptRatio, layer);
+      });
+    }
+
+    canvas.restore();
   }
 }
 

@@ -1,5 +1,11 @@
 import { Entity } from './entity';
-import { EntityID, DrawLayer, Direction, Vector } from './utility-types';
+import {
+  EntityID,
+  DrawLayer,
+  Direction,
+  Vector,
+  Dimensions
+} from './utility-types';
 
 export enum SegmentType {
   Head,
@@ -15,6 +21,11 @@ export class SnakeSegment extends Entity {
     super();
   }
 
-  update(gameTime: any) {}
-  draw(canvas: any, gameTime: any) {}
+  update(elapsedTime: number) {}
+
+  draw(
+    canvas: CanvasRenderingContext2D,
+    pptRatio: Dimensions,
+    layer: DrawLayer
+  ) {}
 }

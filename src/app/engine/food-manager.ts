@@ -1,7 +1,11 @@
 import { EntityManager } from './entity-manager';
-import { Dimensions } from './utility-types';
+import { Dimensions, DrawLayer } from './utility-types';
 
 export class FoodManager extends EntityManager {
   update(elapsedTime: number) {}
-  draw(canvas: CanvasRenderingContext2D, tileRatio: Dimensions) {}
+  draw(
+    canvas: CanvasRenderingContext2D,
+    pptRatio: Dimensions,
+    layer: DrawLayer
+  ) {}
 }

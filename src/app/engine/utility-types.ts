@@ -10,14 +10,15 @@ export interface Dimensions {
 
 export const layerCount = 4;
 export enum DrawLayer {
-  Background,
   Food,
   Snake,
+  Tile,
   Menu,
   None
 }
 
 export enum EntityID {
+  Tile,
   Food,
   Snake,
   SnakeSegment
