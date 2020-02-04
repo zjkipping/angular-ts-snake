@@ -1,4 +1,4 @@
-import { Dimensions, DrawLayer } from './utility-types';
+import { Dimensions, DrawLayer } from './utility';
 
 export abstract class Drawable {
   abstract update(elapsedTime: number, ...args: any): void;

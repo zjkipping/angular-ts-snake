@@ -16,11 +16,8 @@ import {
 } from 'rxjs/operators';
 
 import { GameEngine } from '../engine/framework';
-import { Dimensions } from '../engine/utility-types';
-import {
-  UserInputManager,
-  UserInputStatuses
-} from '../engine/user-input-manager';
+import { Dimensions, UserInputStatuses } from '../engine/utility';
+import { UserInputManager } from '../engine/user-input-manager';
 
 @Component({
   selector: 'snake-game',

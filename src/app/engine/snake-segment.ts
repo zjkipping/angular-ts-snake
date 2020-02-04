@@ -1,11 +1,5 @@
 import { Entity } from './entity';
-import {
-  EntityID,
-  DrawLayer,
-  Direction,
-  Vector,
-  Dimensions
-} from './utility-types';
+import { EntityID, DrawLayer, Direction, Vector, Dimensions } from './utility';
 
 export enum SegmentType {
   Head,
@@ -15,17 +9,54 @@ export enum SegmentType {
 export class SnakeSegment extends Entity {
   id = EntityID.Snake;
   layer = DrawLayer.Snake;
-  direction = Direction.None;
 
-  constructor(public type: SegmentType, public position: Vector) {
+  constructor(
+    public type: SegmentType,
+    public position: Vector,
+    public direction: Direction
+  ) {
     super();
   }
 
-  update(elapsedTime: number) {}
+  setDirection(d: Direction) {
+    this.direction = d;
+  }
+
+  update(elapsedTime: number) {
+    switch (this.direction) {
+      case Direction.Up:
+        this.position.y--;
+        break;
+      case Direction.Down:
+        this.position.y++;
+        break;
+      case Direction.Left:
+        this.position.x--;
+        break;
+      case Direction.Right:
+        this.position.x++;
+        break;
+    }
+  }
 
   draw(
     canvas: CanvasRenderingContext2D,
     pptRatio: Dimensions,
-    layer: DrawLayer
-  ) {}
+    _layer: DrawLayer
+  ) {
+    canvas.beginPath();
+    if (this.type === SegmentType.Head) {
+      canvas.fillStyle = 'rgba(57, 185, 192, 1)';
+    } else {
+      canvas.fillStyle = 'rgba(57, 179, 50, 1)';
+    }
+    canvas.fillRect(
+      this.position.x * pptRatio.width,
+      this.position.y * pptRatio.height,
+      pptRatio.width,
+      pptRatio.height
+    );
+    canvas.stroke();
+    canvas.closePath();
+  }
 }

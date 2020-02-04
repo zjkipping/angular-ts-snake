@@ -1,16 +1,10 @@
 import { BehaviorSubject } from 'rxjs';
-
-export enum KeyStatus {
-  Up,
-  Down,
-  Pressed
-}
-
-type UserInput = 'up' | 'down' | 'left' | 'right' | 'start' | 'pause';
-
-type KeyBindings = Record<UserInput, string>;
-
-export type UserInputStatuses = Record<UserInput, KeyStatus>;
+import {
+  UserInputStatuses,
+  KeyBindings,
+  KeyStatus,
+  UserInput
+} from './utility';
 
 export class UserInputManager {
   private keyBindings: KeyBindings = {

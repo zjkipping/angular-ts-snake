@@ -1,30 +1,17 @@
 import { SnakeManager } from './snake-manager';
-import { layerCount, Dimensions, Vector } from './utility-types';
+import {
+  layerCount,
+  Dimensions,
+  GameStatus,
+  screenLayout,
+  UserInputStatuses
+} from './utility';
 import { FoodManager } from './food-manager';
-import { UserInputStatuses } from './user-input-manager';
 
 import * as Stats from 'stats.js';
 import { environment } from 'src/environments/environment';
 import { Drawable } from './drawable';
 import { Tile } from './tile';
-
-// how many tiles per dimension
-const screenLayout: Dimensions = {
-  width: 21,
-  height: 21
-};
-
-export const screenCenter: Vector = {
-  x: Math.floor(screenLayout.width / 2),
-  y: Math.floor(screenLayout.height / 2)
-};
-
-export enum GameStatus {
-  StartMenu,
-  Playing,
-  Paused,
-  EndMenu
-}
 
 export class GameEngine {
   lastTick = 0;
@@ -69,8 +56,7 @@ export class GameEngine {
       this.stats.begin();
     }
     const elapsedTime = time - this.lastTick;
-    const hitDetections = this.calculateHitDetections();
-    this.update(elapsedTime, userInput, hitDetections);
+    this.update(elapsedTime, userInput);
     this.draw(canvas, screenDimensions);
     this.lastTick = time;
     if (this.stats) {
@@ -80,11 +66,11 @@ export class GameEngine {
 
   calculateHitDetections() {}
 
-  update(
-    elapsedTime: number,
-    userInput: UserInputStatuses,
-    hitDetections: any
-  ) {
+  update(elapsedTime: number, userInput: UserInputStatuses) {
+    // TODO: Need something to manage game status so we can can have menus (start, pause, end)
+
+    // gameplay updates
+    const hitDetections = this.calculateHitDetections();
     this.snakeManager.update(elapsedTime, userInput);
     this.foodManager.update(elapsedTime);
   }
@@ -93,6 +79,7 @@ export class GameEngine {
     canvas.clearRect(0, 0, dimensions.width, dimensions.height);
     canvas.save();
 
+    // gameplay drawing
     const pptRatio = calculatePPT(dimensions, screenLayout.width);
     for (let layer = 0; layer < layerCount; layer++) {
       this.entitiesToDraw.forEach(entity => {

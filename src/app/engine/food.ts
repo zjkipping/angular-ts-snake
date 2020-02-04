@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { EntityID, DrawLayer, Vector, Dimensions } from './utility-types';
+import { EntityID, DrawLayer, Vector, Dimensions } from './utility';
 
 export class Food extends Entity {
   id = EntityID.Food;
