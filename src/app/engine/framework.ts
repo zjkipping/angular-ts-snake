@@ -1,5 +1,5 @@
 import { SnakeManager } from './snake-manager';
-import { layerCount, Dimensions } from './utility-types';
+import { layerCount, Dimensions, Vector } from './utility-types';
 import { FoodManager } from './food-manager';
 import { UserInputStatuses } from './user-input-manager';
 
@@ -8,17 +8,15 @@ import { environment } from 'src/environments/environment';
 import { Drawable } from './drawable';
 import { Tile } from './tile';
 
-// pixels per tile
-// (Need to figure out resolution changing with a perfect square canvas first to be of use)
-const tileDimensions: Dimensions = {
-  width: 16,
-  height: 16
-};
-
 // how many tiles per dimension
 const screenLayout: Dimensions = {
-  width: 25,
-  height: 25
+  width: 21,
+  height: 21
+};
+
+export const screenCenter: Vector = {
+  x: Math.floor(screenLayout.width / 2),
+  y: Math.floor(screenLayout.height / 2)
 };
 
 export enum GameStatus {

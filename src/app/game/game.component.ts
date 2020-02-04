@@ -11,7 +11,8 @@ import {
   filter,
   takeUntil,
   withLatestFrom,
-  startWith
+  startWith,
+  tap
 } from 'rxjs/operators';
 
 import { GameEngine } from '../engine/framework';
@@ -40,20 +41,16 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     if (this.canvasRef) {
       const canvasElement = this.canvasRef.nativeElement;
-      canvasElement.width = canvasElement.offsetWidth;
-      canvasElement.height = canvasElement.offsetHeight;
       const canvasRenderingContext = canvasElement.getContext('2d');
       if (canvasRenderingContext) {
         const crc = canvasRenderingContext;
 
         const screenResize = fromEvent(window, 'resize').pipe(
-          map(() => ({
-            width: canvasElement.width,
-            height: canvasElement.height
-          })),
-          startWith({
-            width: canvasElement.width,
-            height: canvasElement.height
+          map(() => calculateCanvasDimensions()),
+          startWith(calculateCanvasDimensions()),
+          tap(dimensions => {
+            canvasElement.width = dimensions.width;
+            canvasElement.height = dimensions.height;
           })
         );
 
@@ -118,4 +115,13 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     this.destroyCleanup.next();
     this.destroyCleanup.complete();
   }
+}
+
+function calculateCanvasDimensions(): Dimensions {
+  const minDimension = Math.min(
+    window.innerWidth - window.innerWidth * 0.1,
+    window.innerHeight - window.innerHeight * 0.1
+  );
+  const length = minDimension - (minDimension % 25);
+  return { width: length, height: length };
 }

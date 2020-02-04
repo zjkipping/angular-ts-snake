@@ -2,10 +2,11 @@ import { SnakeSegment } from './snake-segment';
 import { EntityManager } from './entity-manager';
 import { UserInputStatuses, KeyStatus } from './user-input-manager';
 import { Direction, Dimensions, DrawLayer } from './utility-types';
+import { screenCenter } from './framework';
 
 export class SnakeManager extends EntityManager {
   segments: SnakeSegment[] = [];
-  position = { x: 12, y: 12 };
+  position = screenCenter;
   direction = Direction.None;
   movementTimeElapsed = 0;
 
