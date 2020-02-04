@@ -6,6 +6,7 @@ import { UserInputStatuses } from './user-input-manager';
 
 import * as Stats from 'stats.js';
 import { environment } from 'src/environments/environment';
+import { Drawable } from './drawable';
 
 // pixels
 const tileDimensions: Dimensions = {
@@ -63,19 +64,25 @@ export class GameEngine {
   }
 
   draw(canvas: CanvasRenderingContext2D, dimensions: Dimensions) {
+    const pptRatio = calculatePPT(dimensions, screenLayout.width);
+
     canvas.clearRect(0, 0, dimensions.width, dimensions.height);
 
-    // pixels per tile
-    const pptRatio =
-      dimensions.width / (screenLayout.width * tileDimensions.width);
-
-    const entities: Entity[] = [];
-    for (let layer = 0; layer < layerCount; layer++) {
-      entities.forEach(entity => {
-        if (entity.layer === layer) {
-          entity.draw(canvas, pptRatio);
-        }
-      });
-    }
+    const entities: Drawable[] = [this.snakeManager];
+    // for (let layer = 0; layer < layerCount; layer++) {
+    entities.forEach(entity => {
+      // if (entity.layer === layer) {
+      entity.draw(canvas, pptRatio);
+      // }
+    });
+    // }
   }
+}
+
+// Pixels Per Tile
+function calculatePPT(d: Dimensions, tileCount: number): Dimensions {
+  return {
+    width: d.width / tileCount,
+    height: d.height / tileCount
+  };
 }

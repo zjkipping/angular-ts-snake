@@ -40,18 +40,21 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     if (this.canvasRef) {
       const canvasElement = this.canvasRef.nativeElement;
+      canvasElement.width = canvasElement.offsetWidth;
+      canvasElement.height = canvasElement.offsetHeight;
       const canvasRenderingContext = canvasElement.getContext('2d');
       if (canvasRenderingContext) {
         const crc = canvasRenderingContext;
 
         const screenResize = fromEvent(window, 'resize').pipe(
+          // tap()
           map(() => ({
-            width: canvasElement.offsetWidth,
-            height: canvasElement.offsetHeight
+            width: canvasElement.width,
+            height: canvasElement.height
           })),
           startWith({
-            width: canvasElement.offsetWidth,
-            height: canvasElement.offsetHeight
+            width: canvasElement.width,
+            height: canvasElement.height
           })
         );
 
