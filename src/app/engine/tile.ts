@@ -9,7 +9,7 @@ export class Tile extends Entity {
     super();
   }
 
-  update(elapsedTime: number) {}
+  update(_elapsedTime: number) {}
 
   draw(
     canvas: CanvasRenderingContext2D,

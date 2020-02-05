@@ -22,7 +22,7 @@ export class SnakeSegment extends Entity {
     this.direction = d;
   }
 
-  update(elapsedTime: number) {
+  update(_elapsedTime: number) {
     switch (this.direction) {
       case Direction.Up:
         this.position.y--;

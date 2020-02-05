@@ -20,28 +20,43 @@ export class SnakeManager extends EntityManager {
   update(elapsedTime: number, userInput: UserInputStatuses) {
     this.movementTimeElapsed += elapsedTime;
 
+    // deciding the new head direction (can't turn backwards)
     let newDirection = this.head.direction;
-    if (isKeyDown(userInput.up)) {
+    if (isKeyDown(userInput.up) && this.head.direction !== Direction.Down) {
       newDirection = Direction.Up;
-    } else if (isKeyDown(userInput.down)) {
+    } else if (
+      isKeyDown(userInput.down) &&
+      this.head.direction !== Direction.Up
+    ) {
       newDirection = Direction.Down;
-    } else if (isKeyDown(userInput.left)) {
+    } else if (
+      isKeyDown(userInput.left) &&
+      this.head.direction !== Direction.Right
+    ) {
       newDirection = Direction.Left;
-    } else if (isKeyDown(userInput.right)) {
+    } else if (
+      isKeyDown(userInput.right) &&
+      this.head.direction !== Direction.Left
+    ) {
       newDirection = Direction.Right;
     }
 
-    // temporary until eating fruit is added (need hit detection & random spawning first)
+    // temporary until eating fruit is added (need hit detection & random fruit spawning first)
     if (wasKeyPressed(userInput.start)) {
+      const tail = this.bodySegments[this.bodySegments.length - 1];
+      const position = tail ? tail.position : this.head.position;
+      const direction = tail ? tail.direction : this.head.direction;
       this.bodySegments.push(
         new SnakeSegment(
           SegmentType.Body,
-          findNewSegmentPosition(this.head.position, this.head.direction, 1),
-          this.head.direction
+          findNewSegmentPosition(position, direction, 1),
+          direction
         )
       );
     }
+    //
 
+    // if their is a new direction then update the head & add it to the turns list
     if (newDirection !== this.head.direction) {
       this.head.setDirection(newDirection);
       if (this.bodySegments.length > 0) {
@@ -49,24 +64,26 @@ export class SnakeManager extends EntityManager {
       }
     }
 
+    // every 150ms we want to move the snake's parts
     if (this.movementTimeElapsed >= 150) {
       this.movementTimeElapsed = 0;
       this.head.update(elapsedTime);
       this.bodySegments.forEach((segment, index) => {
-        this.turnSegmentIfNeeded(
-          segment,
-          index === this.bodySegments.length - 1
-        );
+        if (this.turns.size > 0) {
+          // check to see if the body segment needs to turn it's direction
+          this.turnSegmentIfNeeded(
+            segment,
+            index === this.bodySegments.length - 1
+          );
+        }
         segment.update(elapsedTime);
       });
     }
   }
 
-  // TODO: turning upward doesn't work for some reason...
   turnSegmentIfNeeded(segment: SnakeSegment, lastSegment: boolean) {
     const turn = this.turns.get(JSON.stringify(segment.position));
-    console.log(this.turns, segment.position, turn);
-    if (turn) {
+    if (turn !== null && turn !== undefined) {
       segment.setDirection(turn);
       if (lastSegment) {
         this.turns.delete(JSON.stringify(segment.position));
