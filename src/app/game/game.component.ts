@@ -25,7 +25,7 @@ import { UserInputManager } from '../engine/user-input-manager';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('gameScreen', { static: false }) canvasRef?: ElementRef<
+  @ViewChild('gameScreen') canvasRef?: ElementRef<
     HTMLCanvasElement
   >;
 
