@@ -15,8 +15,8 @@ import {
   tap
 } from 'rxjs/operators';
 
-import { GameEngine } from '../engine/framework';
-import { Dimensions, UserInputStatuses } from '../engine/utility';
+import { GameEngine } from '../engine/game-engine';
+import { Dimensions, UserInputStatuses, screenLayout } from '../engine/utility';
 import { UserInputManager } from '../engine/user-input-manager';
 
 @Component({
@@ -25,9 +25,7 @@ import { UserInputManager } from '../engine/user-input-manager';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('gameScreen') canvasRef?: ElementRef<
-    HTMLCanvasElement
-  >;
+  @ViewChild('gameScreen') canvasRef?: ElementRef<HTMLCanvasElement>;
 
   gameEngine = new GameEngine();
   userInputManager = new UserInputManager();
@@ -119,6 +117,8 @@ function calculateCanvasDimensions(): Dimensions {
     window.innerWidth - window.innerWidth * 0.1,
     window.innerHeight - window.innerHeight * 0.1
   );
-  const length = minDimension - (minDimension % 25);
+  const length =
+    minDimension -
+    (minDimension % Math.min(screenLayout.width, screenLayout.height));
   return { width: length, height: length };
 }

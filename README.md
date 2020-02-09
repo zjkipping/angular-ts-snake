@@ -1,27 +1,24 @@
 # Snake
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.23.
+## How to Run
 
-## Development server
+`yarn install`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+`yarn start`
 
-## Code scaffolding
+Game will be availabe on `localhost:4200`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## How To Play
 
-## Build
+Controls:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- W - Up
+- D - Right
+- S - Down
+- A - Left
 
-## Running unit tests
+You can pause by pressing the Spacebar.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+To restart the game (if you win or lose) press Escape.
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+These controls be remapped in [user-input-manager.ts](src/app/engine/user-input-manager.ts).

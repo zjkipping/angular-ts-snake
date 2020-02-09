@@ -7,19 +7,33 @@ import {
   Vector,
   screenCenter,
   UserInputStatuses,
-  isKeyDown,
-  wasKeyPressed
+  isKeyDown
 } from './utility';
 
 export class SnakeManager extends EntityManager {
-  head = new SnakeSegment(SegmentType.Head, screenCenter, Direction.None);
-  bodySegments: SnakeSegment[] = [];
-  turns = new Map<string, Direction>();
-  movementTimeElapsed = 0;
+  head: SnakeSegment;
+  bodySegments: SnakeSegment[];
+  turns: Map<string, Direction>;
+  movementTimeElapsed: number;
 
-  update(elapsedTime: number, userInput: UserInputStatuses) {
+  constructor() {
+    super();
+    this.head = new SnakeSegment(
+      SegmentType.Head,
+      { ...screenCenter },
+      Direction.None
+    );
+    this.bodySegments = [];
+    this.turns = new Map<string, Direction>();
+    this.movementTimeElapsed = 0;
+  }
+
+  update(
+    elapsedTime: number,
+    userInput: UserInputStatuses,
+    shouldGrow = false
+  ) {
     this.movementTimeElapsed += elapsedTime;
-
     // deciding the new head direction (can't turn backwards)
     let newDirection = this.head.direction;
     if (isKeyDown(userInput.up) && this.head.direction !== Direction.Down) {
@@ -41,8 +55,7 @@ export class SnakeManager extends EntityManager {
       newDirection = Direction.Right;
     }
 
-    // temporary until eating fruit is added (need hit detection & random fruit spawning first)
-    if (wasKeyPressed(userInput.start)) {
+    if (shouldGrow) {
       const tail = this.bodySegments[this.bodySegments.length - 1];
       const position = tail ? tail.position : this.head.position;
       const direction = tail ? tail.direction : this.head.direction;
@@ -54,7 +67,6 @@ export class SnakeManager extends EntityManager {
         )
       );
     }
-    //
 
     // if their is a new direction then update the head & add it to the turns list
     if (newDirection !== this.head.direction) {

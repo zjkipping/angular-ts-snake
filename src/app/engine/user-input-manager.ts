@@ -12,8 +12,8 @@ export class UserInputManager {
     down: 's',
     left: 'a',
     right: 'd',
-    start: ' ',
-    pause: 'Escape'
+    start: 'Escape',
+    pause: ' '
   };
 
   private _userInput: UserInputStatuses = {
